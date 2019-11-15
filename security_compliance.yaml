@@ -57,7 +57,7 @@ Resources:
   LinuxPatchSSM:
     Type: AWS::SSM::Association
     Properties:
-      AssociationName: Windows-Patch-Compliance
+      AssociationName: Linux-Patch-Compliance
       Name: AWS-RunInspecChecks
       ScheduleExpression: !Sub "cron(${CronExpression})"
       Parameters:
