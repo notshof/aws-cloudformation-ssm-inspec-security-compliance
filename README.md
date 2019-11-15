@@ -1,5 +1,5 @@
 # Security Compliance CloudFormation Template
-## A SSM-powered Security Compliance CloudFormation CloudFormation Template
+## A SSM-powered Security Compliance CloudFormation Template
 
 For creating an SSM association task to scan Windows and Linux VMs matching specific tags for Security Compliance based on Dev-Sec baseline and patch-baseline.
 The SSM association task runs on a scheduled basis which is defined by the `CronExpression`.
