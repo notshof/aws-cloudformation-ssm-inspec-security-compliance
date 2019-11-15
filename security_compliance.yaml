@@ -1,0 +1,68 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: SSM Association for AWS Run Inspec Checks
+Parameters:
+  CronExpression:
+    Type: String
+    Description: Cron expression to schedule when the Inspec checks are run
+    Default: "0 16 ? * TUE *"
+  InstanceTagKey:
+    Type: String
+    Description: EC2 tag key to identify instances
+    Default: "os"
+  WindowsTagValue:
+    Type: CommaDelimitedList
+    Description: EC2 tag value to identify windows machines
+    Default: "windows,win"
+  LinuxTagValue:
+    Type: CommaDelimitedList
+    Description: EC2 tag value to identify linux machines
+    Default: "linux,lin"
+Resources:
+  WindowsBaselineSSM:
+    Type: AWS::SSM::Association
+    Properties:
+      AssociationName: Windows-Baseline-Compliance
+      Name: AWS-RunInspecChecks
+      ScheduleExpression: !Sub "cron(${CronExpression})"
+      Parameters:
+        sourceType: ['GitHub']
+        sourceInfo: ['{"owner":"dev-sec","repository":"amazon-ssm","path":"windows-baseline","getOptions":"branch:master"}']
+      Targets:
+        - Key: !Sub "tag:${InstanceTagKey}"
+          Values: !Ref WindowsTagValue
+  WindowsPatchSSM:
+    Type: AWS::SSM::Association
+    Properties:
+      AssociationName: Windows-Patch-Compliance
+      Name: AWS-RunInspecChecks
+      ScheduleExpression: !Sub "cron(${CronExpression})"
+      Parameters:
+        sourceType: ['GitHub']
+        sourceInfo: ['{"owner":"dev-sec","repository":"amazon-ssm","path":"windows-patch-baseline","getOptions":"branch:master"}']
+      Targets:
+        - Key: !Sub "tag:${InstanceTagKey}"
+          Values: !Ref WindowsTagValue
+  LinuxBaselineSSM:
+    Type: AWS::SSM::Association
+    Properties:
+      AssociationName: Linux-Baseline-Compliance
+      Name: AWS-RunInspecChecks
+      ScheduleExpression: !Sub "cron(${CronExpression})"
+      Parameters:
+        sourceType: ['GitHub']
+        sourceInfo: ['{"owner":"dev-sec","repository":"amazon-ssm","path":"linux-baseline","getOptions":"branch:master"}']
+      Targets:
+        - Key: !Sub "tag:${InstanceTagKey}"
+          Values: !Ref LinuxTagValue
+  LinuxPatchSSM:
+    Type: AWS::SSM::Association
+    Properties:
+      AssociationName: Windows-Patch-Compliance
+      Name: AWS-RunInspecChecks
+      ScheduleExpression: !Sub "cron(${CronExpression})"
+      Parameters:
+        sourceType: ['GitHub']
+        sourceInfo: ['{"owner":"dev-sec","repository":"amazon-ssm","path":"linux-patch-baseline","getOptions":"branch:master"}']
+      Targets:
+        - Key: !Sub "tag:${InstanceTagKey}"
+          Values: !Ref LinuxTagValue
